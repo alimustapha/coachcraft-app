@@ -1,0 +1,11 @@
+# Maestro E2E Test Configuration
+# CoachCraft - AI Coaching Platform
+
+appId: com.coachcraft.app  # iOS Bundle ID / Android Package Name
+
+env:
+  TEST_EMAIL: "maestro-test@coachcraft.app"
+  TEST_PASSWORD: "TestPassword123!"
+
+# Flow-level tags are defined in each flow file
+# Available tags: smoke, auth, coach, chat, subscription

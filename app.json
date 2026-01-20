@@ -14,7 +14,9 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.coachcraft.app",
+      "usesAppleSignIn": true
     },
     "android": {
       "adaptiveIcon": {

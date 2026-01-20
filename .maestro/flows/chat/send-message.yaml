@@ -1,0 +1,50 @@
+# Send Message Test
+# Verifies user can send a message and receive AI response
+# Uses Max Flow coach (UUID: 11111111-1111-1111-1111-111111111111)
+# PRECONDITION: TEST_EMAIL account must be Pro OR have daily messages available
+# appId inherited from config.yaml
+tags:
+  - chat
+---
+- launchApp:
+    clearState: true
+- runFlow: ../auth/_sign-in-helper.yaml
+
+# Navigate to coach and start chat
+- tapOn:
+    id: "coach-card-11111111-1111-1111-1111-111111111111"
+- tapOn:
+    id: "start-chat-button"
+- assertVisible:
+    id: "chat-input"
+    timeout: 5000
+
+# Send a message
+- tapOn:
+    id: "chat-input"
+- inputText: "Hello coach!"
+- tapOn:
+    id: "chat-send-button"
+
+# Assert user message appears (both testID and content)
+- assertVisible:
+    id: "message-user"
+    timeout: 5000
+- assertVisible: "Hello coach!"
+
+# Wait for AI response (typing indicator appears then disappears)
+- assertVisible:
+    id: "typing-indicator"
+    timeout: 15000
+- assertNotVisible:
+    id: "typing-indicator"
+    timeout: 60000
+
+# Verify assistant message appeared
+- assertVisible:
+    id: "message-assistant"
+    timeout: 5000
+
+# Verify chat is still functional
+- assertVisible:
+    id: "chat-input"

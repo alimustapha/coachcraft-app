@@ -1,0 +1,2 @@
+export const FREE_CUSTOM_COACH_LIMIT = 1;
+export const FREE_DAILY_MESSAGE_LIMIT = 10;

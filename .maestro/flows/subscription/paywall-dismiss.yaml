@@ -1,0 +1,21 @@
+# Paywall Dismiss Test
+# Verifies paywall appears and can be dismissed
+# PRECONDITION: TEST_EMAIL account must be on free tier
+# appId inherited from config.yaml
+tags:
+  - subscription
+---
+- launchApp:
+    clearState: true
+- runFlow: ../auth/_sign-in-helper.yaml
+- tapOn: "Profile"
+- tapOn:
+    id: "upgrade-button"
+- assertVisible:
+    id: "paywall-modal"
+    timeout: 5000
+- tapOn:
+    id: "paywall-close"
+- assertNotVisible:
+    id: "paywall-modal"
+    timeout: 3000

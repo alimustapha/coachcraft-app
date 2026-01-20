@@ -1,0 +1,10 @@
+# Sign In Test
+# Verifies user can sign in with email/password
+# appId inherited from config.yaml
+tags:
+  - auth
+  - smoke
+---
+- launchApp:
+    clearState: true
+- runFlow: _sign-in-helper.yaml

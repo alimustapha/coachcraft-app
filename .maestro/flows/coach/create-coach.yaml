@@ -1,0 +1,26 @@
+# Create Coach Test
+# Verifies user can create a custom coach
+# Uses timestamp for unique name to ensure idempotency
+# PRECONDITION: TEST_EMAIL account must be Pro OR have coach slots available
+# appId inherited from config.yaml
+tags:
+  - coach
+---
+- launchApp:
+    clearState: true
+- runFlow: ../auth/_sign-in-helper.yaml
+- tapOn:
+    id: "create-coach-button"
+- tapOn:
+    id: "create-coach-name"
+- inputText: "E2E Coach ${maestro.timestamp}"
+- tapOn:
+    id: "create-coach-specialty-productivity"
+- tapOn:
+    id: "create-coach-description"
+- inputText: "Automated test coach for E2E testing"
+- tapOn:
+    id: "create-coach-save"
+- assertVisible:
+    id: "coach-list"
+    timeout: 10000

@@ -1,0 +1,18 @@
+# View Coach Detail Test
+# Verifies user can view prebuilt coach details
+# Uses Max Flow coach (UUID: 11111111-1111-1111-1111-111111111111)
+# appId inherited from config.yaml
+tags:
+  - coach
+---
+- launchApp:
+    clearState: true
+- runFlow: ../auth/_sign-in-helper.yaml
+- tapOn:
+    id: "coach-card-11111111-1111-1111-1111-111111111111"
+- assertVisible:
+    id: "coach-name"
+- assertVisible:
+    id: "coach-avatar"
+- assertVisible:
+    id: "start-chat-button"

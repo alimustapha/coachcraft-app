@@ -1,0 +1,23 @@
+# Sign Up Test
+# Verifies new user registration flow
+# Uses timestamp for unique email to ensure idempotency
+# PRECONDITION: Email confirmation must be disabled in Supabase
+# appId inherited from config.yaml
+tags:
+  - auth
+---
+- launchApp:
+    clearState: true
+- tapOn:
+    id: "sign-up-link"
+- tapOn:
+    id: "sign-up-email"
+- inputText: "e2e-${maestro.timestamp}@coachcraft.app"
+- tapOn:
+    id: "sign-up-password"
+- inputText: "TestPassword123!"
+- tapOn:
+    id: "sign-up-button"
+- assertVisible:
+    id: "coach-list"
+    timeout: 10000

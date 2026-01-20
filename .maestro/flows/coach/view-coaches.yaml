@@ -1,0 +1,11 @@
+# View Coaches Test
+# Verifies coach list is displayed after sign in
+# appId inherited from config.yaml
+tags:
+  - coach
+---
+- launchApp:
+    clearState: true
+- runFlow: ../auth/_sign-in-helper.yaml
+- assertVisible:
+    id: "coach-list"

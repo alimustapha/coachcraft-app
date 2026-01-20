@@ -1,0 +1,21 @@
+# Sign Out Test
+# Verifies user can sign out from profile
+# appId inherited from config.yaml
+tags:
+  - auth
+---
+- launchApp:
+    clearState: true
+- runFlow: _sign-in-helper.yaml
+- tapOn: "Profile"
+- scrollUntilVisible:
+    element:
+      id: "sign-out-button"
+    direction: DOWN
+- tapOn:
+    id: "sign-out-button"
+# Note: Alert buttons don't support testID on iOS
+- tapOn: "Sign Out"
+- assertVisible:
+    id: "sign-in-email"
+    timeout: 5000

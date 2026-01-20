@@ -1,0 +1,69 @@
+# Full Flow Smoke Test
+# Complete user journey: sign in -> view coach -> chat -> sign out
+# Uses Max Flow coach (UUID: 11111111-1111-1111-1111-111111111111)
+# PRECONDITION: TEST_EMAIL account must have messages available
+# appId inherited from config.yaml
+tags:
+  - smoke
+---
+- launchApp:
+    clearState: true
+
+# Sign in
+- runFlow: ../auth/_sign-in-helper.yaml
+
+# Verify coach list
+- assertVisible:
+    id: "coach-list"
+
+# Select prebuilt coach
+- tapOn:
+    id: "coach-card-11111111-1111-1111-1111-111111111111"
+- assertVisible:
+    id: "coach-name"
+
+# Start chat
+- tapOn:
+    id: "start-chat-button"
+- assertVisible:
+    id: "chat-input"
+    timeout: 5000
+
+# Send a message
+- tapOn:
+    id: "chat-input"
+- inputText: "Smoke test message"
+- tapOn:
+    id: "chat-send-button"
+
+# Verify message was sent (testID and content)
+- assertVisible:
+    id: "message-user"
+    timeout: 3000
+- assertVisible: "Smoke test message"
+
+# Navigate back to coach detail
+- back
+- assertVisible:
+    id: "coach-name"
+    timeout: 3000
+
+# Navigate back to coach list
+- back
+- assertVisible:
+    id: "coach-list"
+    timeout: 3000
+
+# Sign out via profile tab
+- tapOn: "Profile"
+- scrollUntilVisible:
+    element:
+      id: "sign-out-button"
+    direction: DOWN
+- tapOn:
+    id: "sign-out-button"
+# Alert button - text selector required
+- tapOn: "Sign Out"
+- assertVisible:
+    id: "sign-in-email"
+    timeout: 5000
