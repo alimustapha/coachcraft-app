@@ -3,6 +3,7 @@
 # Uses timestamp for unique email to ensure idempotency
 # PRECONDITION: Email confirmation must be disabled in Supabase
 # appId inherited from config.yaml
+appId: com.coachcraft.app
 tags:
   - auth
 ---

@@ -1,6 +1,7 @@
 # Sign Out Test
 # Verifies user can sign out from profile
 # appId inherited from config.yaml
+appId: com.coachcraft.app
 tags:
   - auth
 ---

@@ -3,6 +3,7 @@
 # Uses timestamp for unique name to ensure idempotency
 # PRECONDITION: TEST_EMAIL account must be Pro OR have coach slots available
 # appId inherited from config.yaml
+appId: com.coachcraft.app
 tags:
   - coach
 ---

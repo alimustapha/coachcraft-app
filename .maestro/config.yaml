@@ -5,7 +5,7 @@ appId: com.coachcraft.app  # iOS Bundle ID / Android Package Name
 
 env:
   TEST_EMAIL: "maestro-test@coachcraft.app"
-  TEST_PASSWORD: "TestPassword123!"
+  TEST_PASSWORD: "Password123!"
 
 # Flow-level tags are defined in each flow file
 # Available tags: smoke, auth, coach, chat, subscription

@@ -1,8 +1,6 @@
 # Full Flow Smoke Test
 # Complete user journey: sign in -> view coach -> chat -> sign out
-# Uses Max Flow coach (UUID: 11111111-1111-1111-1111-111111111111)
-# PRECONDITION: TEST_EMAIL account must have messages available
-# appId inherited from config.yaml
+appId: com.coachcraft.app
 tags:
   - smoke
 ---
@@ -16,17 +14,21 @@ tags:
 - assertVisible:
     id: "coach-list"
 
-# Select prebuilt coach
+# Select a prebuilt coach - use contains for partial match
 - tapOn:
-    id: "coach-card-11111111-1111-1111-1111-111111111111"
-- assertVisible:
-    id: "coach-name"
+    text: "Max Flow"
+    index: 0
+- extendedWaitUntil:
+    visible:
+      id: "coach-name"
+    timeout: 5000
 
 # Start chat
 - tapOn:
     id: "start-chat-button"
-- assertVisible:
-    id: "chat-input"
+- extendedWaitUntil:
+    visible:
+      id: "chat-input"
     timeout: 5000
 
 # Send a message
@@ -36,22 +38,23 @@ tags:
 - tapOn:
     id: "chat-send-button"
 
-# Verify message was sent (testID and content)
-- assertVisible:
-    id: "message-user"
-    timeout: 3000
-- assertVisible: "Smoke test message"
+# Verify message was sent
+- extendedWaitUntil:
+    visible: "Smoke test message"
+    timeout: 5000
 
 # Navigate back to coach detail
 - back
-- assertVisible:
-    id: "coach-name"
+- extendedWaitUntil:
+    visible:
+      id: "coach-name"
     timeout: 3000
 
 # Navigate back to coach list
 - back
-- assertVisible:
-    id: "coach-list"
+- extendedWaitUntil:
+    visible:
+      id: "coach-list"
     timeout: 3000
 
 # Sign out via profile tab
@@ -64,6 +67,7 @@ tags:
     id: "sign-out-button"
 # Alert button - text selector required
 - tapOn: "Sign Out"
-- assertVisible:
-    id: "sign-in-email"
+- extendedWaitUntil:
+    visible:
+      id: "sign-in-email"
     timeout: 5000

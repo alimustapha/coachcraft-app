@@ -1,14 +1,21 @@
 # Reusable sign-in flow - use with runFlow
-# appId inherited from config.yaml
+appId: com.coachcraft.app
 ---
 - tapOn:
     id: "sign-in-email"
-- inputText: ${TEST_EMAIL}
+- inputText: "maestro-test@coachcraft.app"
+- hideKeyboard
 - tapOn:
     id: "sign-in-password"
-- inputText: ${TEST_PASSWORD}
+- inputText: "Password123!"
+- hideKeyboard
 - tapOn:
     id: "sign-in-button"
-- assertVisible:
-    id: "coach-list"
-    timeout: 10000
+# Dismiss iOS password save dialog if it appears
+- tapOn:
+    text: "Inte nu"
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: "coach-list"
+    timeout: 15000

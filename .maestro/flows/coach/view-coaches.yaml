@@ -1,6 +1,7 @@
 # View Coaches Test
 # Verifies coach list is displayed after sign in
 # appId inherited from config.yaml
+appId: com.coachcraft.app
 tags:
   - coach
 ---

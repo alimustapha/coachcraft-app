@@ -2,6 +2,7 @@
 # Verifies paywall appears and can be dismissed
 # PRECONDITION: TEST_EMAIL account must be on free tier
 # appId inherited from config.yaml
+appId: com.coachcraft.app
 tags:
   - subscription
 ---

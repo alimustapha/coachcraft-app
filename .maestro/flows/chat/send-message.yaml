@@ -3,6 +3,7 @@
 # Uses Max Flow coach (UUID: 11111111-1111-1111-1111-111111111111)
 # PRECONDITION: TEST_EMAIL account must be Pro OR have daily messages available
 # appId inherited from config.yaml
+appId: com.coachcraft.app
 tags:
   - chat
 ---
