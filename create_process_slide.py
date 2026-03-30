@@ -228,9 +228,19 @@ for idx, f in enumerate(findings):
     end_step = f["steps"][1]
 
     # Card spans from left edge of first step to right edge of last step
-    card_left = step_positions[start_step][0]
+    # Enforce a minimum width so text always fits; anchor to the right edge
+    # but never go left of the slide margin
     card_right = step_positions[end_step][2]
-    card_width = card_right - card_left
+    natural_left = step_positions[start_step][0]
+    natural_width = card_right - natural_left
+    min_card_width = Inches(5.5)
+    min_left = Inches(0.65)  # slide left margin
+    if natural_width < min_card_width:
+        card_left = max(min_left, card_right - min_card_width)
+        card_width = card_right - card_left
+    else:
+        card_width = natural_width
+        card_left = natural_left
     card_h = finding_row_h
 
     # Finding card (the card width itself shows which steps are covered)
