@@ -213,46 +213,42 @@ findings = [
     },
 ]
 
-# Layout: findings as horizontal bars below the process flow, with bracket connectors
-findings_start_y = Inches(2.65)
-finding_row_h = Inches(0.62)
+# Layout: finding cards span the width of the relevant process steps
+findings_start_y = Inches(2.45)
+finding_row_h = Inches(0.58)
 finding_gap = Inches(0.08)
-bracket_area_h = Inches(0.25)  # space for connector lines
 
-# Colors for finding severity gradient (all use same style for clean look)
-FINDING_COLORS = [
-    RGBColor(0xE7, 0x4C, 0x3C),  # Red
-    RGBColor(0xE7, 0x6F, 0x51),  # Orange-red
-    RGBColor(0xF0, 0x84, 0x4D),  # Orange
-    RGBColor(0xF3, 0x9C, 0x12),  # Amber
-    RGBColor(0xE6, 0x7E, 0x22),  # Dark orange
-    RGBColor(0xD3, 0x54, 0x00),  # Burnt orange
-    RGBColor(0xC0, 0x39, 0x2B),  # Deep red
-]
+# Number circle left margin
+NUM_MARGIN_LEFT = Inches(0.25)
+num_circle_size = Inches(0.32)
 
 for idx, f in enumerate(findings):
     y = findings_start_y + idx * (finding_row_h + finding_gap)
     start_step = f["steps"][0]
     end_step = f["steps"][1]
 
-    # Calculate horizontal span based on process step positions
-    bar_left = step_positions[start_step][0]
-    bar_right = step_positions[end_step][2]
-    bar_width = bar_right - bar_left
+    # Card spans from left edge of first step to right edge of last step
+    card_left = step_positions[start_step][0]
+    card_right = step_positions[end_step][2]
+    card_width = card_right - card_left
+    card_h = finding_row_h
 
-    # Number circle area (to the left of the content area)
-    # Finding number badge
-    num_circle_size = Inches(0.30)
-    num_x = Inches(0.25)
-    num_y = y + (finding_row_h - num_circle_size) / 2
+    # Finding card (the card width itself shows which steps are covered)
+    card = add_rounded_rect(slide, card_left, y, card_width, card_h,
+                            LIGHT_GRAY, border_color=DARK_NAVY, border_width=Pt(1.2))
+    card.adjustments[0] = 0.06
+
+    # Number circle (positioned to the left of the card, in the margin)
+    num_x = NUM_MARGIN_LEFT
+    num_y = y + (card_h - num_circle_size) / 2
 
     circle = slide.shapes.add_shape(MSO_SHAPE.OVAL, num_x, num_y, num_circle_size, num_circle_size)
     circle.fill.solid()
-    circle.fill.fore_color.rgb = FINDING_COLORS[idx]
+    circle.fill.fore_color.rgb = DARK_NAVY
     circle.line.fill.background()
     tf = circle.text_frame
     tf.paragraphs[0].text = f["num"]
-    tf.paragraphs[0].font.size = Pt(9)
+    tf.paragraphs[0].font.size = Pt(10)
     tf.paragraphs[0].font.color.rgb = WHITE
     tf.paragraphs[0].font.bold = True
     tf.paragraphs[0].font.name = "Calibri"
@@ -264,47 +260,43 @@ for idx, f in enumerate(findings):
     bodyPr.set('tIns', '0')
     bodyPr.set('bIns', '0')
 
-    # Connector bar (colored line showing which steps are affected)
-    connector_h = Inches(0.04)
-    connector_y = y
-    connector = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, bar_left, connector_y, bar_width, connector_h)
-    connector.fill.solid()
-    connector.fill.fore_color.rgb = FINDING_COLORS[idx]
-    connector.line.fill.background()
+    # Text inside card: title (bold) + description
+    inner_pad = Inches(0.15)
+    text_left = card_left + inner_pad
+    text_top = y + Inches(0.06)
+    text_h = card_h - Inches(0.12)
 
-    # Small vertical ticks at start and end of connector
-    tick_w = Pt(2)
-    tick_h = Inches(0.10)
-    for tick_x in [bar_left, bar_right - tick_w]:
-        tick = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, tick_x, connector_y - Inches(0.03), tick_w, tick_h)
-        tick.fill.solid()
-        tick.fill.fore_color.rgb = FINDING_COLORS[idx]
-        tick.line.fill.background()
+    # For narrow cards, stack title above description
+    # For wide cards, title left + description right
+    if card_width < Inches(4.0):
+        # Narrow card: title and desc stacked vertically inside
+        txBox = slide.shapes.add_textbox(text_left, text_top, card_width - 2 * inner_pad, text_h)
+        tf = txBox.text_frame
+        tf.word_wrap = True
+        # Title paragraph
+        p1 = tf.paragraphs[0]
+        p1.text = f["title"]
+        p1.font.size = Pt(9)
+        p1.font.color.rgb = DARK_NAVY
+        p1.font.bold = True
+        p1.font.name = "Calibri"
+        p1.space_after = Pt(2)
+        # Description paragraph
+        p2 = tf.add_paragraph()
+        p2.text = f["desc"]
+        p2.font.size = Pt(7.5)
+        p2.font.color.rgb = MED_GRAY
+        p2.font.name = "Calibri"
+    else:
+        # Wide card: title left, description right
+        title_w = min(Inches(3.6), card_width * 0.35)
+        tb = add_text_box(slide, text_left, text_top, title_w, text_h,
+                           f["title"], font_size=9, font_color=DARK_NAVY, bold=True)
 
-    # Finding content area (full width card)
-    card_left = Inches(0.65)
-    card_width = Inches(12.0)
-    card_top = y + connector_h + Inches(0.02)
-    card_h = finding_row_h - connector_h - Inches(0.04)
-
-    card = add_rounded_rect(slide, card_left, card_top, card_width, card_h, LIGHT_GRAY, border_color=BORDER_LINE, border_width=Pt(0.5))
-    card.adjustments[0] = 0.06
-
-    # Finding title (bold, left side)
-    title_left = card_left + Inches(0.15)
-    title_top = card_top + Inches(0.04)
-    title_w = Inches(3.8)
-    title_h = card_h - Inches(0.08)
-
-    tb = add_text_box(slide, title_left, title_top, title_w, title_h,
-                       f["title"], font_size=9, font_color=DARK_NAVY, bold=True)
-
-    # Finding description (right side, lighter)
-    desc_left = title_left + title_w + Inches(0.1)
-    desc_w = card_width - title_w - Inches(0.45)
-
-    tb2 = add_text_box(slide, desc_left, title_top, desc_w, title_h,
-                        f["desc"], font_size=8, font_color=MED_GRAY)
+        desc_left = text_left + title_w + Inches(0.15)
+        desc_w = card_width - title_w - 2 * inner_pad - Inches(0.15)
+        tb2 = add_text_box(slide, desc_left, text_top, desc_w, text_h,
+                            f["desc"], font_size=8, font_color=MED_GRAY)
 
 
 # ============================================================
